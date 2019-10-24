@@ -25,9 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // 初始化图像显示
-    frame = new QFrame(this);
+    frame = new QFrame(ui->label);
 //    frame->resize(640,480);
-    frame->setGeometry(850,10,640,480);
+    frame->setGeometry(0,0,640,480);
     pixmap = new QPixmap();
     palette = new QPalette();
 

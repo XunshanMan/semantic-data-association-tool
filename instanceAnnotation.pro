@@ -36,4 +36,8 @@ INCLUDEPATH += /usr/include/eigen3
 
 # For data_process lib
 LIBS += -L/home/jhz/workspace/projects/ellipsoid-slam/core/lib -lutils
-QMAKE_LFLAGS += -Wl,-rpath,"'\$$ORIGIN'"
+# QMAKE_LFLAGS += -Wl,-rpath,"'\$$ORIGIN'"
+
+
+# For Viewer.
+

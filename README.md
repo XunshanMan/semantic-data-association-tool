@@ -15,9 +15,9 @@ It's friendly for annotating. Just like this:
 Load it in Qt Creator from .pro file. Then play it as you like.
 
 # TODO
-[] Automatic data association: 
+[ ] Automatic data association: 
 It's too much for human annotation alone. Let machine help you.
 
-[] Visualization: Show the asssociation better with text, rectangle and something else on the images.
+[ ] Visualization: Show the asssociation better with text, rectangle and something else on the images.
 
 Welcome to join me!
