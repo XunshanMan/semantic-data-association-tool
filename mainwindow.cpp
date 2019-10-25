@@ -348,7 +348,7 @@ void MainWindow::on_pushButton_6_clicked()
 
     Instance ins;
     ins.id = mvInstances.size();
-    ins.label = -1;
+    ins.label = 0;
 
     mvInstances.push_back(ins);
 
@@ -363,7 +363,12 @@ void MainWindow::on_tableWidget_instance3D_cellChanged(int row, int column)
     // 更新内存中的Instance存储情况.
     if( column == INS_TABLE_LABEL ){
         QTableWidgetItem* item = ui->tableWidget_instance3D->item(row, column);
-        mvInstances[row].label = item->text().toInt();
+
+        // 先拆分  id / txt.
+        QString str = item->text();
+        QString num_str = str.section(" / ", 0,0);
+
+        mvInstances[row].label = num_str.toInt();
     }
     else if( column > 0 ){
         QTableWidgetItem* item = ui->tableWidget_instance3D->item(row, column);
