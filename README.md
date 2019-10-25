@@ -3,6 +3,14 @@ For the semantic object-level SLAM, we need to solve the data associations of th
 
 This project aims at building a convenient tool for annotating data association. The User Interface is built upon Qt. 
 
+# Update: 3D annotation module
+3D annotation module is part of the automatic annotation. We get the 3D position of the objects and use their 2d projections to help us annotate the 2d bbox.
+In this way, only several global 3d objects need annotated, instead of all the 2d image frames.
+
+![img](./.md/3d-1.png)
+
+![img](./.md/3d-2.png)
+
 # Example
 Build it.
 Run the excutable binary file.

@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_2D">
      <attribute name="title">
@@ -392,7 +392,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>321</width>
+        <width>661</width>
         <height>201</height>
        </rect>
       </property>
@@ -425,7 +425,7 @@
         <string>Load</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_imagePath_2">
+      <widget class="QLineEdit" name="lineEdit_pcdPath">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -435,7 +435,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr1_desk/images/</string>
+        <string>/home/jhz/workspace/projects/dataset_tools/instanceAnnotation/data/mpMap.pcd</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_num_2">
@@ -477,6 +477,32 @@
         <string>Instance Path:</string>
        </property>
       </widget>
+      <widget class="QLineEdit" name="lineEdit_settingPath">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>60</y>
+         <width>291</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/home/jhz/workspace/projects/ellipsoid-slam/Example/param/TUM1.yaml</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_11">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>40</y>
+         <width>191</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Visualization Setting path:</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QLabel" name="label_10">
       <property name="geometry">
@@ -491,13 +517,13 @@
        <string>Instance Lists</string>
       </property>
      </widget>
-     <widget class="QTableWidget" name="tableWidget_instance_2">
+     <widget class="QTableWidget" name="tableWidget_instance3D">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>250</y>
-        <width>1011</width>
-        <height>131</height>
+        <width>1131</width>
+        <height>391</height>
        </rect>
       </property>
       <column>
@@ -542,6 +568,11 @@
       </column>
       <column>
        <property name="text">
+        <string>b</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
         <string>c</string>
        </property>
       </column>
@@ -554,14 +585,43 @@
      <widget class="QPushButton" name="pushButton_6">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>390</y>
+        <x>20</x>
+        <y>650</y>
         <width>171</width>
         <height>27</height>
        </rect>
       </property>
       <property name="text">
        <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="horizontalSlider">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>190</y>
+        <width>331</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="pageStep">
+       <number>100</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_7">
+      <property name="geometry">
+       <rect>
+        <x>970</x>
+        <y>650</y>
+        <width>171</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Quit</string>
       </property>
      </widget>
     </widget>

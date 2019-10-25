@@ -35,9 +35,9 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_highgui
 INCLUDEPATH += /usr/include/eigen3
 
 # For data_process lib
-LIBS += -L/home/jhz/workspace/projects/ellipsoid-slam/core/lib -lutils
-# QMAKE_LFLAGS += -Wl,-rpath,"'\$$ORIGIN'"
+LIBS += -L/home/jhz/workspace/projects/ellipsoid-slam/core/lib -lutils -lEllipsoidSLAM
+INCLUDEPATH += /home/jhz/workspace/projects/ellipsoid-slam/core/include
+INCLUDEPATH += /home/jhz/workspace/projects/ellipsoid-slam/core
 
-
-# For Viewer.
-
+DISTFILES += \
+    CMakeLists.txt

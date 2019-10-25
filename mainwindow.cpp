@@ -15,6 +15,9 @@
 
 #include "instance.h"
 
+// 可视化插件
+#include "visualize.h"
+
 using namespace Eigen;
 using namespace std;
 
@@ -41,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // 初始化table性能
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableWidget_instance->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    mbInstanceTableInitiated = false;
 }
 
 MainWindow::~MainWindow()
@@ -179,7 +184,7 @@ void MainWindow::readLabelConfig(string &path){
 }
 
 void MainWindow::readInstances(string &path){
-    MatrixXd instanceMat = readDataFromFile(path.c_str(), true);        // 剔除首行
+    MatrixXd instanceMat = readDataFromFile(path.c_str(), false);        // 剔除首行
     int num = instanceMat.rows();
 
     mvInstances.clear();
@@ -190,7 +195,10 @@ void MainWindow::readInstances(string &path){
 
         Instance obj;
         obj.id = int(v(0));
-        obj.label = int(v(1));
+        for(int n=0;n<9;n++)
+            obj.param[n] = double(v(n+1));
+
+        obj.label = int(v(10));
 
         mvInstances[i] = obj;
     }
@@ -200,20 +208,25 @@ void MainWindow::readInstances(string &path){
 
 void MainWindow::refreshInstanceTable(){
     int num = mvInstances.size();
-    QTableWidget* pTable = ui->tableWidget_instance;
+    QTableWidget* pTable = ui->tableWidget_instance3D;
     pTable->clearContents();
     pTable->setRowCount(num);
     for( int i=0; i<num;i++ )
     {
         Instance* pObj = &mvInstances[i];
-        pTable->setItem(i, 0, new QTableWidgetItem(QString::number(pObj->id)));
+        pTable->setItem(i, INS_TABLE_ID, new QTableWidgetItem(QString::number(pObj->id)));
+
+        for( int n=0; n<9; n++)
+            pTable->setItem(i, n+1, new QTableWidgetItem(QString::number(pObj->param[n])));
 
         int label = pObj->label;
         QString str;
         str = QString::number(label) + QString(" / ") + QString::fromStdString(mvLabelIDToString[label]);
-        pTable->setItem(i, 1, new QTableWidgetItem(str));
+        pTable->setItem(i, INS_TABLE_LABEL, new QTableWidgetItem(str));
 
     }
+
+    mbInstanceTableInitiated = true;
 }
 
 
@@ -281,6 +294,10 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
     saveCurrentDetection();
+
+    // Save all files.
+    saveCurrentInstances();
+
     this->destroy();
 }
 
@@ -301,3 +318,138 @@ void MainWindow::on_tableWidget_instance_itemSelectionChanged()
             item->setText(QString::number(currentInstance));
     }
 }
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    std::cout << "Initializing Viewer..." << std::endl;
+
+    string path_setting = ui->lineEdit_settingPath->text().toStdString();
+    string path_pcd = ui->lineEdit_pcdPath->text().toStdString();
+
+    mVisualizer.startVisualizationThread(path_setting);
+    mVisualizer.addBackgroundPoint(path_pcd);
+    mVisualizer.refreshInstances(mvInstances);
+}
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    // 入口: txt 文档 -> 内存
+
+    // 添加: 改变内存, 重新渲染显示
+    // 修改过程 -> 同步改变内存
+
+    // 出口: 关闭程序, 内存存储到txt
+
+    Instance ins;
+    ins.id = mvInstances.size();
+    ins.label = -1;
+
+    mvInstances.push_back(ins);
+
+    refreshInstanceTable(); // 刷新实例table
+
+}
+
+void MainWindow::on_tableWidget_instance3D_cellChanged(int row, int column)
+{
+    if( !mbInstanceTableInitiated ) return;
+    if(mvInstances.size() == 0) return;
+    // 更新内存中的Instance存储情况.
+    if( column == INS_TABLE_LABEL ){
+        QTableWidgetItem* item = ui->tableWidget_instance3D->item(row, column);
+        mvInstances[row].label = item->text().toInt();
+    }
+    else if( column > 0 ){
+        QTableWidgetItem* item = ui->tableWidget_instance3D->item(row, column);
+        mvInstances[row].param[column-1] = item->text().toDouble();
+    }
+
+    // 更新
+    if(mVisualizer.isInitialized())
+        mVisualizer.refreshInstances(mvInstances);
+
+}
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    double percentage = 1.0 + (double)(value-50)/100.0;
+    double changed_value = miCurrentSliderCenter * percentage;
+
+    QTableWidgetItem* item = ui->tableWidget_instance3D->item(miCurrentInstanceTableRow, miCurrentInstanceTableCol);
+    item->setText(QString::number(changed_value));
+}
+
+void MainWindow::on_tableWidget_instance3D_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
+{
+    int row = currentRow;
+    int column = currentColumn;
+    if( column < INS_TABLE_X || column > INS_TABLE_C) return;
+    // 获取当前值.
+    QTableWidgetItem* item = ui->tableWidget_instance3D->item(row, column);
+    double value = item->text().toDouble();
+
+    miCurrentSliderCenter = value;
+
+    miCurrentInstanceTableRow = row;
+    miCurrentInstanceTableCol = column;
+
+    std::cout << "miCurrentInstanceTableRow: " << miCurrentInstanceTableRow << std::endl;
+    std::cout << "miCurrentInstanceTableCol: " << miCurrentInstanceTableCol << std::endl;
+    // 刷新滚动条上下限
+    ui->horizontalSlider->setValue(50);
+}
+
+void MainWindow::on_tableWidget_instance3D_cellActivated(int row, int column)
+{
+
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    on_pushButton_4_clicked(); // 与2d按钮一致.
+}
+
+void MainWindow::saveCurrentInstances()
+{
+    QTableWidget* pTable = ui->tableWidget_instance3D;
+
+    int rows = pTable->rowCount();
+    int cols = pTable->columnCount();
+
+    int num = mvInstances.size();
+
+    // 保存
+    MatrixXd insMat = instancesToMat(mvInstances);
+
+    // 保存mmDetMat
+    saveMatToFile(insMat, msInstancesPath.c_str());
+
+}
+
+MatrixXd MainWindow::instancesToMat(vector<Instance> &instances){
+    int rows = instances.size();
+    int cols = 11;
+    Eigen::MatrixXd mat;
+    mat.resize(rows, cols);
+    for(int i=0;i<rows;i++)
+    {
+        Eigen::Matrix<double, 11, 1> vec;
+        for(int n=0;n<9;n++)
+            vec(n+1) = instances[i].param[n];
+        vec(0) = instances[i].id;
+        vec(10) = instances[i].label;
+
+        mat.row(i) = vec;
+    }
+
+    return mat;
+
+}
+
+

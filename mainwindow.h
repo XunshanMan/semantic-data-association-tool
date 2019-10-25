@@ -15,6 +15,7 @@
 #include <Eigen/Core>
 
 #include "instance.h"
+#include "visualize.h"
 
 using namespace std;
 using namespace Eigen;
@@ -39,7 +40,16 @@ enum DETCTION_TABLE_COLS
 enum INSTANCE_TABLE_COLS
 {
     INS_TABLE_ID = 0,
-    INS_TABLE_LABEL = 1,
+    INS_TABLE_X = 1,
+    INS_TABLE_Y = 2,
+    INS_TABLE_Z = 3,
+    INS_TABLE_ROLL = 4,
+    INS_TABLE_PITCH = 5,
+    INS_TABLE_YAW = 6,
+    INS_TABLE_A = 7,
+    INS_TABLE_B = 8,
+    INS_TABLE_C = 9,
+    INS_TABLE_LABEL = 10,
 
 };
 
@@ -66,6 +76,22 @@ private slots:
 
     void on_tableWidget_instance_itemSelectionChanged();
 
+    void on_pushButton_5_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_6_clicked();
+
+    void on_tableWidget_instance3D_cellChanged(int row, int column);
+
+    void on_tableWidget_instance3D_cellActivated(int row, int column);
+
+    void on_horizontalSlider_valueChanged(int value);
+
+    void on_tableWidget_instance3D_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
+
+    void on_pushButton_7_clicked();
+
 private:
     Ui::MainWindow *ui;
     QFrame *frame;
@@ -89,6 +115,15 @@ private:
 
     MatrixXd mmDetMat;
 
+    visualizer mVisualizer;
+
+    bool mbInstanceTableInitiated;
+
+    // 实现滚动条功能
+    double miCurrentSliderCenter;
+    int miCurrentInstanceTableRow;
+    int miCurrentInstanceTableCol;
+
 private:
 // 一些函数
     void refreshText();
@@ -105,7 +140,12 @@ private:
 
     // 保存文件
     void saveCurrentDetection();
+    void saveCurrentInstances();
 
+    // 可视化处理
+    void Visualization(string& path_setting);
+
+    MatrixXd instancesToMat(vector<Instance> &instances);
 };
 
 #endif // MAINWINDOW_H

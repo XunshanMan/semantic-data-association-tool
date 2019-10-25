@@ -7,8 +7,23 @@ class Instance
 public:
     Instance();
 
-    int label;
     int id;
+
+//    double x;
+//    double y;
+//    double z;
+//    double r;
+//    double p;
+//    double y;
+//    double a;
+//    double b;
+//    double c;
+    double param[9];
+
+
+
+    int label;
+
 
 
 };
