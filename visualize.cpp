@@ -147,3 +147,22 @@ visualizer::visualizer():mbInitialized(false)
 {
 
 }
+
+void visualizer::addTrajectory(Eigen::MatrixXd &poseMat){
+    std::cout << "Visualize trajectory... " << std::endl;
+    for(int i=0; i<poseMat.rows(); i++){
+        g2o::SE3Quat* pTwc = new g2o::SE3Quat(poseMat.row(i).tail(7));
+        mpMap->addCameraStateToTrajectory(pTwc);
+    }
+}
+
+void visualizer::clearTrajectory()
+{
+//    std::vector<g2o::SE3Quat*> states = mpMap->getCameraStateTrajectory();
+//    // release
+//    for(auto p : states)
+//        delete p;
+
+//    mpMap->
+
+}

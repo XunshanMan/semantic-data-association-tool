@@ -28,6 +28,9 @@ void initializeInstances(vector<Instance> &instances);
 
 bool isInitialized();
 
+void addTrajectory(Eigen::MatrixXd &poseMat);
+void clearTrajectory();
+
 visualizer();
 
 private:

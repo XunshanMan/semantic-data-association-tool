@@ -18,6 +18,9 @@
 // 可视化插件
 #include "visualize.h"
 
+#include "autodataassociation.h"
+#include <opencv2/opencv.hpp>
+
 using namespace Eigen;
 using namespace std;
 
@@ -82,8 +85,26 @@ void MainWindow::on_pushButton_clicked()
     refreshInstanceTable();
 
     // 读取第0张图.
-    miCurrentID = 408;  // DEBUG: 408物体比较多.
+    miCurrentID = 0;
     dealWithPic(miCurrentID);
+
+    // 加载自动数据关联.
+    Matrix3d calib;
+//    calib << 517.3, 0, 318.6,
+//                0, 516.5, 255.3,
+//                0, 0, 1;
+    // For TUM fr1
+
+    calib << 520.9, 0, 325.1,
+        0, 521.0, 249.7,
+        0, 0, 1;
+    // For TUM fr2
+
+    mAssociater.initialize(mvInstances, calib);
+
+    // 初始化数据集工具
+    msDatasetDir = ui->lineEdit_datasetDir->text().toStdString();
+    mLoader.loadDataset(msDatasetDir);
 
 }
 
@@ -110,6 +131,10 @@ void MainWindow::dealWithPic(int id){
 
     // 读取检测
     readDetection(id);
+
+    // 进行自动数据关联
+    if(ui->checkBox->isChecked())
+        automaticAssociation();
 
 }
 
@@ -457,4 +482,89 @@ MatrixXd MainWindow::instancesToMat(vector<Instance> &instances){
 
 }
 
+void MainWindow::automaticAssociation(){
+    // 步骤1： 找到该帧对应的groundtruth;
+    // 没有gt的帧可以直接舍去.
 
+    // 临时参数： CALIB INFORMATION
+
+    // 当前 timestamp
+
+    // 感觉需要加入cv::Mat了. 然后将mLoader也交给 mAssociater去完成.
+    VectorXd pose;
+    cv::Mat rgb, depth;
+    bool find_gt = mLoader.findFrameUsingID(miCurrentID, rgb, depth, pose); // 给TUM的loader添加一个函数接口.
+
+    if(find_gt)
+    {
+        vector<Association> associations = mAssociater.process(pose, mmDetMat);
+
+        // 获得了，如何显示出来?
+
+        // 1） 直接将对应表格切换ID.
+        int assoNum = associations.size();
+        for(int i=0; i < assoNum; i++)
+        {
+            std::cout << "Asso " << i << " : " << associations[i].detID
+                      << " -> " << associations[i].instanceID << std::endl;
+            QString str;
+            str = QString::number(associations[i].instanceID);
+            ui->tableWidget->setItem(associations[i].detID, DET_TABLE_INSTANCE, new QTableWidgetItem(str));
+        }
+
+        // 2） 在图像中可视化投影结果，对应InstanceID， LabelID
+        // cv 读取当前帧.
+        // 读取图像切换.
+        string detFullPath = mDetectionFiles[miCurrentID];
+        string bareFileName = splitFileName(detFullPath, true);
+        string imageFullPath = msImagePath + bareFileName + ".png";
+        cv::Mat oriMat = cv::imread(imageFullPath, IMREAD_COLOR);
+        cv::Mat mat = mAssociater.drawProjection(oriMat);
+        // cv->
+
+        (*pixmap) = QPixmap::fromImage(QImage((unsigned char*) mat.data, mat.cols, mat.rows, QImage::Format_RGB888));;
+
+        palette->setBrush(frame->backgroundRole(),QBrush(*pixmap));
+        frame->setPalette(*palette);
+        frame->setAutoFillBackground(true);
+        //frame->setMask(pixmap->mask());  //可以将图片中透明部分显示为透明的
+        frame->show();
+
+    }
+    else
+        std::cout << "No ground truth found for frame" << miCurrentID << std::endl;
+
+
+}
+
+
+
+
+void MainWindow::on_checkBox_showtraj_stateChanged(int arg1)
+{
+    if(ui->checkBox_showtraj->isChecked()){
+        MatrixXd poseMat;
+        poseMat.resize(0, 7);
+
+        int jump = miTotalNum / 100;
+        for( int i=0; i<miTotalNum ;i=i+jump)
+        {
+            // 开启
+            VectorXd pose;
+            cv::Mat rgb, depth;
+            bool find_gt = mLoader.findFrameUsingID(i, rgb, depth, pose); // 给TUM的loader添加一个函数接口.
+
+            if(find_gt)
+            {
+                poseMat.conservativeResize(poseMat.rows()+1, poseMat.cols());
+                poseMat.row(poseMat.rows()-1) = pose;
+            }
+
+        }
+
+        mVisualizer.addTrajectory(poseMat);
+    }
+    else
+        mVisualizer.clearTrajectory();
+        // 关闭
+}

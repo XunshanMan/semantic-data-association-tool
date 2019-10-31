@@ -18,7 +18,8 @@ find_package(Qt5Widgets REQUIRED) # Equivalent of QT += widgets
 
 set(SOURCES
     main.cpp mainwindow.cpp utility.cpp instance.cpp
-    visualize.cpp)
+    visualize.cpp
+    autodataassociation.cpp)
 set(UI mainwindow.ui)
 
 
@@ -65,6 +66,7 @@ target_link_libraries(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     /home/jhz/workspace/projects/ellipsoid-slam/core/lib/libutils.so
     /home/jhz/workspace/projects/ellipsoid-slam/core/lib/libEllipsoidSLAM.so
+    /home/jhz/workspace/projects/ellipsoid-slam/core/lib/libtum_rgbd.so
     ${PCL_LIBRARIES}
     ${OpenCV_LIBS}
     ${Pangolin_LIBRARIES}

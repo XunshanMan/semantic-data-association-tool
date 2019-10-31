@@ -179,7 +179,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>641</width>
+        <width>831</width>
         <height>201</height>
        </rect>
       </property>
@@ -235,7 +235,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr1_desk/images/</string>
+        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr2_desk/images/</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_detection_dir">
@@ -248,7 +248,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr1_desk/associations/</string>
+        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr2_desk/associations/</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_num">
@@ -256,7 +256,7 @@
         <rect>
          <x>20</x>
          <y>170</y>
-         <width>67</width>
+         <width>121</width>
          <height>17</height>
         </rect>
        </property>
@@ -300,7 +300,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset_tools/instanceAnnotation/data/instances.txt</string>
+        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr2_desk/instance/instances.txt</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_7">
@@ -314,6 +314,32 @@
        </property>
        <property name="text">
         <string>Instance Path:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_datasetDir">
+       <property name="geometry">
+        <rect>
+         <x>650</x>
+         <y>60</y>
+         <width>171</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/home/jhz/workspace/projects/dataset/TUM/rgbd_dataset_freiburg2_desk/</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>650</x>
+         <y>40</y>
+         <width>101</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Dataset Dir:</string>
        </property>
       </widget>
      </widget>
@@ -382,6 +408,19 @@
        <string>Quit</string>
       </property>
      </widget>
+     <widget class="QCheckBox" name="checkBox">
+      <property name="geometry">
+       <rect>
+        <x>870</x>
+        <y>580</y>
+        <width>221</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Automatic Data Association</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_3D">
      <attribute name="title">
@@ -435,7 +474,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset_tools/instanceAnnotation/data/mpMap.pcd</string>
+        <string>/home/jhz/workspace/projects/dataset/TUM/rgbd_dataset_freiburg2_desk/dense/transformed.pcd</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_num_2">
@@ -443,38 +482,12 @@
         <rect>
          <x>10</x>
          <y>160</y>
-         <width>67</width>
+         <width>91</width>
          <height>17</height>
         </rect>
        </property>
        <property name="text">
         <string>0 / 0</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_instancePath_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>120</y>
-         <width>291</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>/home/jhz/workspace/projects/dataset_tools/instanceAnnotation/data/instances.txt</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_9">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>100</y>
-         <width>141</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Instance Path:</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_settingPath">
@@ -487,7 +500,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/ellipsoid-slam/Example/param/TUM1.yaml</string>
+        <string>/home/jhz/workspace/projects/ellipsoid-slam/Example/param/TUM2.yaml</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_11">
@@ -622,6 +635,19 @@
       </property>
       <property name="text">
        <string>Quit</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_showtraj">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>110</y>
+        <width>171</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Show Trajectory</string>
       </property>
      </widget>
     </widget>

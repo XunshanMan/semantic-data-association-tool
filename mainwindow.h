@@ -16,6 +16,11 @@
 
 #include "instance.h"
 #include "visualize.h"
+#include "DataStruct.h"
+#include "autodataassociation.h"
+
+// TUM RGBD数据集处理
+#include "src/tum_rgbd/io.h"
 
 using namespace std;
 using namespace Eigen;
@@ -23,35 +28,6 @@ using namespace Eigen;
 namespace Ui {
 class MainWindow;
 }
-
-// 表格ENUM
-enum DETCTION_TABLE_COLS
-{
-    DET_TABLE_ID = 0,
-    DET_TABLE_X1 = 1,
-    DET_TABLE_Y1 = 2,
-    DET_TABLE_X2 = 3,
-    DET_TABLE_Y2 = 4,
-    DET_TABLE_LABEL = 5,
-    DET_TABLE_PROB = 6,
-    DET_TABLE_INSTANCE = 7,
-};
-
-enum INSTANCE_TABLE_COLS
-{
-    INS_TABLE_ID = 0,
-    INS_TABLE_X = 1,
-    INS_TABLE_Y = 2,
-    INS_TABLE_Z = 3,
-    INS_TABLE_ROLL = 4,
-    INS_TABLE_PITCH = 5,
-    INS_TABLE_YAW = 6,
-    INS_TABLE_A = 7,
-    INS_TABLE_B = 8,
-    INS_TABLE_C = 9,
-    INS_TABLE_LABEL = 10,
-
-};
 
 class MainWindow : public QMainWindow
 {
@@ -92,6 +68,8 @@ private slots:
 
     void on_pushButton_7_clicked();
 
+    void on_checkBox_showtraj_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     QFrame *frame;
@@ -108,6 +86,7 @@ private:
     string msImagePath;
     string msLabelConfigPath;
     string msInstancesPath;
+    string msDatasetDir;
 
     vector<string> mvLabelIDToString;
 
@@ -117,12 +96,17 @@ private:
 
     visualizer mVisualizer;
 
+    AutoDataAssociation mAssociater;
+
     bool mbInstanceTableInitiated;
 
     // 实现滚动条功能
     double miCurrentSliderCenter;
     int miCurrentInstanceTableRow;
     int miCurrentInstanceTableCol;
+
+    // 数据集处理器
+    TUMRGBD::Dataset mLoader;
 
 private:
 // 一些函数
@@ -146,6 +130,9 @@ private:
     void Visualization(string& path_setting);
 
     MatrixXd instancesToMat(vector<Instance> &instances);
+
+    void automaticAssociation();
+
 };
 
 #endif // MAINWINDOW_H
