@@ -10,7 +10,7 @@
 #include <pcl/visualization/cloud_viewer.h>
 
 typedef pcl::PointXYZRGB PointT;
-typedef pcl::PointCloud<PointT> PointCloud;
+typedef pcl::PointCloud<PointT> PointCloudPCL;
 
 #include "instance.h"
 
@@ -40,7 +40,7 @@ private:
     bool mbInitialized;
 
 private:
-    QuadricSLAM::PointCloud pclToQuadricPointCloud(PointCloud::Ptr &pCloud);
+    QuadricSLAM::PointCloud pclToQuadricPointCloud(PointCloudPCL::Ptr &pCloud);
     g2o::ellipsoid* generateEllipsoid(Instance& ins);
 };
 

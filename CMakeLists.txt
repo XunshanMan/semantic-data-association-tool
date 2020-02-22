@@ -46,8 +46,8 @@ include_directories(
 
 # For ellipsoid_slam core
 include_directories(
-    /home/jhz/workspace/projects/ellipsoid-slam/core/include
-    /home/jhz/workspace/projects/ellipsoid-slam/core
+    $ENV{EllipsoidSLAM_PATH}/core/include
+    $ENV{EllipsoidSLAM_PATH}/core
     )
 
 # For PCL
@@ -64,9 +64,9 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Widgets
     )
 target_link_libraries(${PROJECT_NAME}
-    /home/jhz/workspace/projects/ellipsoid-slam/core/lib/libutils.so
-    /home/jhz/workspace/projects/ellipsoid-slam/core/lib/libEllipsoidSLAM.so
-    /home/jhz/workspace/projects/ellipsoid-slam/core/lib/libtum_rgbd.so
+    $ENV{EllipsoidSLAM_PATH}/core/lib/libutils.so
+    $ENV{EllipsoidSLAM_PATH}/core/lib/libEllipsoidSLAM.so
+    $ENV{EllipsoidSLAM_PATH}/core/lib/libtum_rgbd.so
     ${PCL_LIBRARIES}
     ${OpenCV_LIBS}
     ${Pangolin_LIBRARIES}
