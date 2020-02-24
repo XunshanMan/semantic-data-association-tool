@@ -11,6 +11,10 @@ In this way, only several global 3d objects need annotated, instead of all the 2
 
 ![img](./.md/3d-2.png)
 
+# Dependency
+## SLAM Core
+* branch : b908f6e
+
 # Example
 Build it.
 Run the excutable binary file.
