@@ -31,6 +31,7 @@ enum INSTANCE_TABLE_COLS
     INS_TABLE_B = 8,
     INS_TABLE_C = 9,
     INS_TABLE_LABEL = 10,
+    INS_TABLE_GPROT = 11,
 
 };
 

@@ -14,6 +14,9 @@
 #include <algorithm>
 #include <fstream>
 
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+
 using namespace std;
 
 bool compare_func_stringasdouble(string &s1, string &s2)
@@ -81,5 +84,17 @@ vector<string> readStringFromFile(const char* fileName, bool dropFirstline){
     fin.close();
 
     return strs;
+
+}
+
+Eigen::Vector4d loadPlaneFromString(string &str)
+{
+    vector<string> s;
+    boost::split( s, str, boost::is_any_of( " \t," ), boost::token_compress_on );
+
+    Eigen::Vector4d result;
+    result << stof(s[0]), stof(s[1]), stof(s[2]), stof(s[3]);
+
+    return result;
 
 }

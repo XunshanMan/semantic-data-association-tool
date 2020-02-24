@@ -474,7 +474,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset/TUM/rgbd_dataset_freiburg2_desk/dense/transformed.pcd</string>
+        <string>/home/tongyuan/workspace/object-slam/datas/real-home-annotation/pointcloud.pcd</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_num_2">
@@ -500,7 +500,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/ellipsoid-slam/Example/param/TUM2.yaml</string>
+        <string>/home/tongyuan/workspace/object-slam/object-level-slam/Example/param/TUM2.yaml</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_11">
@@ -514,6 +514,84 @@
        </property>
        <property name="text">
         <string>Visualization Setting path:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_9">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>150</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Instance Path:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_instancePath_2">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>170</y>
+         <width>291</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/home/tongyuan/workspace/object-slam/datas/real-home-annotation/object_list.txt</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>90</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Label config Path:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_labelConfig_2">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>110</y>
+         <width>291</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/home/tongyuan/workspace/object-slam/annotation/semantic-data-association-tool/data/coco.names</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_14">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>100</y>
+         <width>101</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Ground Plane:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_groundPlane">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>120</y>
+         <width>291</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>0.0167579 -0.983143  0.182067  0.428614</string>
        </property>
       </widget>
      </widget>
@@ -535,7 +613,7 @@
        <rect>
         <x>10</x>
         <y>250</y>
-        <width>1131</width>
+        <width>1191</width>
         <height>391</height>
        </rect>
       </property>
@@ -592,6 +670,11 @@
       <column>
        <property name="text">
         <string>label</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ExtraYaw</string>
        </property>
       </column>
      </widget>
@@ -659,7 +742,7 @@
      <x>0</x>
      <y>0</y>
      <width>1513</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

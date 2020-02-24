@@ -228,6 +228,8 @@ void MainWindow::readInstances(string &path){
         mvInstances[i] = obj;
     }
 
+    mvInstancesWithRot = mvInstances;
+
 
 }
 
@@ -243,6 +245,9 @@ void MainWindow::refreshInstanceTable(){
 
         for( int n=0; n<9; n++)
             pTable->setItem(i, n+1, new QTableWidgetItem(QString::number(pObj->param[n])));
+
+        // 将地平面额外旋转置0
+        pTable->setItem(i, INS_TABLE_GPROT, new QTableWidgetItem(QString::number(0)));
 
         int label = pObj->label;
         QString str;
@@ -281,6 +286,7 @@ void MainWindow::on_tableWidget_itemSelectionChanged()
 }
 
 void MainWindow::saveCurrentDetection(){
+    if(mDetectionFiles.size() < 1) return;
     string currentPath = mDetectionFiles[miCurrentID];
 
     // 主要处理detMat的最后一列.
@@ -351,6 +357,18 @@ void MainWindow::on_pushButton_5_clicked()
     string path_setting = ui->lineEdit_settingPath->text().toStdString();
     string path_pcd = ui->lineEdit_pcdPath->text().toStdString();
 
+    // 更新标签.
+    msLabelConfigPath = ui->lineEdit_labelConfig_2->text().toStdString();
+    readLabelConfig(msLabelConfigPath);
+    // 更新实例.
+    msInstancesPath = ui->lineEdit_instancePath_2->text().toStdString();
+    readInstances(msInstancesPath);
+    refreshInstanceTable();
+
+    // 读取地平面
+    string strGroundPlane = ui->lineEdit_groundPlane->text().toStdString();
+    mGroundPlane = loadPlaneFromString(strGroundPlane);
+
     mVisualizer.startVisualizationThread(path_setting);
     mVisualizer.addBackgroundPoint(path_pcd);
     mVisualizer.refreshInstances(mvInstances);
@@ -395,14 +413,33 @@ void MainWindow::on_tableWidget_instance3D_cellChanged(int row, int column)
 
         mvInstances[row].label = num_str.toInt();
     }
+    else if( column == INS_TABLE_GPROT )
+    {
+        QTableWidgetItem* item = ui->tableWidget_instance3D->item(row, column);
+
+        double rot_angle = item->text().toDouble();
+        // 若是旋转改变了.
+
+        // 注意需要保证二者的数量一致, id对应.
+        AddRotToInstance(mvInstancesWithRot[row], mvInstances[row], rot_angle);
+
+        // 此处不需要修改 mvInstances中的值.
+    }
     else if( column > 0 ){
         QTableWidgetItem* item = ui->tableWidget_instance3D->item(row, column);
         mvInstances[row].param[column-1] = item->text().toDouble();
+
+        QTableWidgetItem* item_rot_angle = ui->tableWidget_instance3D->item(row, INS_TABLE_GPROT);
+        double rot_angle = item_rot_angle->text().toDouble();
+        AddRotToInstance(mvInstancesWithRot[row], mvInstances[row], rot_angle);
     }
+
+    // 计算 mvInstancesWithRot， 将地面法向量叠加的计算输出并显示.
+    // refreshInstancesWithRot();
 
     // 更新
     if(mVisualizer.isInitialized())
-        mVisualizer.refreshInstances(mvInstances);
+        mVisualizer.refreshInstances(mvInstancesWithRot);
 
 }
 
@@ -419,7 +456,7 @@ void MainWindow::on_tableWidget_instance3D_currentCellChanged(int currentRow, in
 {
     int row = currentRow;
     int column = currentColumn;
-    if( column < INS_TABLE_X || column > INS_TABLE_C) return;
+    if( column != INS_TABLE_GPROT && (column < INS_TABLE_X || column > INS_TABLE_C) ) return;
     // 获取当前值.
     QTableWidgetItem* item = ui->tableWidget_instance3D->item(row, column);
     double value = item->text().toDouble();
@@ -452,13 +489,13 @@ void MainWindow::saveCurrentInstances()
     int rows = pTable->rowCount();
     int cols = pTable->columnCount();
 
-    int num = mvInstances.size();
+    int num = mvInstancesWithRot.size();
 
     // 保存
-    MatrixXd insMat = instancesToMat(mvInstances);
+    MatrixXd insMat = instancesToMat(mvInstancesWithRot);
 
     // 保存mmDetMat
-    saveMatToFile(insMat, msInstancesPath.c_str());
+    saveMatToFile(insMat, (msInstancesPath+"_gt.txt").c_str());
 
 }
 
@@ -568,3 +605,38 @@ void MainWindow::on_checkBox_showtraj_stateChanged(int arg1)
         mVisualizer.clearTrajectory();
         // 关闭
 }
+
+void MainWindow::AddRotToInstance(Instance &inWithRot, Instance &in, double rot_angle)
+{
+    // 先获得旋转矩阵
+    g2o::ellipsoid e;
+    Eigen::Matrix<double, 9, 1> v;
+    for(int n=0;n<9;n++)
+        v(n) = in.param[n];
+    e.fromMinimalVector(v);
+
+    Eigen::Quaterniond quat = e.pose.rotation();
+
+    // 叠加旋转
+
+    // 计算 rot axis.
+    Eigen::AngleAxisd rotAxis(rot_angle, mGroundPlane.head(3));
+    Eigen::Quaterniond rotQuat(rotAxis);
+
+    Eigen::Quaterniond quatRoted = rotQuat * quat;   // 此处右乘 (0,0,1) 理论上也是一样的.
+
+    e.setRotation(quatRoted);
+
+    Eigen::Matrix<double, 9, 1> v_withRot;
+    v_withRot = e.toMinimalVector();
+    for(int n=0;n<9;n++)
+        inWithRot.param[n] = v_withRot[n];
+
+
+}
+
+// void MainWindow::refreshInstancesWithRot()
+// {
+//     int num = mvInstances.size();
+//     mvInstancesWithRot
+// }

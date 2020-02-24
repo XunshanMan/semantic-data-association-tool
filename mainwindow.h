@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
@@ -91,6 +92,7 @@ private:
     vector<string> mvLabelIDToString;
 
     vector<Instance> mvInstances;
+    vector<Instance> mvInstancesWithRot;
 
     MatrixXd mmDetMat;
 
@@ -107,6 +109,9 @@ private:
 
     // 数据集处理器
     TUMRGBD::Dataset mLoader;
+
+    // 地平面
+    Eigen::Vector4d mGroundPlane;
 
 private:
 // 一些函数
@@ -132,6 +137,10 @@ private:
     MatrixXd instancesToMat(vector<Instance> &instances);
 
     void automaticAssociation();
+
+    // 从当前instances 考虑 rot 生成 mvInstancesWithRot
+    void AddRotToInstance(Instance &inWithRot, Instance &in, double rot_angle);
+    // void refreshInstancesWithRot();
 
 };
 

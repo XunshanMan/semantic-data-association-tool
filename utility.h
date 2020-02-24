@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 
+#include <Eigen/Core>
+
 using namespace std;
 
 /*
@@ -22,6 +24,7 @@ void sortFileNames(vector<string>& filenames, vector<string>& filenamesSorted);
 
 vector<string> readStringFromFile(const char* fileName, bool dropFirstline = false);
 
+Eigen::Vector4d loadPlaneFromString(string &str);
 
 #endif // UTILITY_H
 
