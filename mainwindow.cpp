@@ -94,11 +94,21 @@ void MainWindow::on_pushButton_clicked()
 //                0, 516.5, 255.3,
 //                0, 0, 1;
     // For TUM fr1
-
-    calib << 520.9, 0, 325.1,
-        0, 521.0, 249.7,
-        0, 0, 1;
+    // calib << 520.9, 0, 325.1,
+    //     0, 521.0, 249.7,
+    //     0, 0, 1;
     // For TUM fr2
+
+    // For kinect2
+    // Camera.fx: 540.68603515625
+    // Camera.fy: 540.68603515625
+    // Camera.cx: 479.75
+    // Camera.cy: 269.75
+    calib << 540.68603515625, 0, 479.75,
+        0, 540.68603515625, 269.75,
+        0, 0, 1;
+
+    std::cout << "Load calibration file : " << std::endl << calib << std::endl;
 
     mAssociater.initialize(mvInstances, calib);
 
@@ -529,8 +539,10 @@ void MainWindow::automaticAssociation(){
 
     // 感觉需要加入cv::Mat了. 然后将mLoader也交给 mAssociater去完成.
     VectorXd pose;
-    cv::Mat rgb, depth;
-    bool find_gt = mLoader.findFrameUsingID(miCurrentID, rgb, depth, pose); // 给TUM的loader添加一个函数接口.
+    string detFullPath = mDetectionFiles[miCurrentID];
+    string bareFileName = splitFileName(detFullPath, true);
+    string str_timestamp = bareFileName;
+    bool find_gt = mLoader.getPoseFromTimeStamp(str_timestamp, pose); // 给TUM的loader添加一个函数接口.
 
     if(find_gt)
     {
@@ -552,14 +564,15 @@ void MainWindow::automaticAssociation(){
         // 2） 在图像中可视化投影结果，对应InstanceID， LabelID
         // cv 读取当前帧.
         // 读取图像切换.
-        string detFullPath = mDetectionFiles[miCurrentID];
-        string bareFileName = splitFileName(detFullPath, true);
         string imageFullPath = msImagePath + bareFileName + ".png";
         cv::Mat oriMat = cv::imread(imageFullPath, IMREAD_COLOR);
         cv::Mat mat = mAssociater.drawProjection(oriMat);
         // cv->
+        mat = mAssociater.drawBboxMat(mat, mmDetMat);
 
-        (*pixmap) = QPixmap::fromImage(QImage((unsigned char*) mat.data, mat.cols, mat.rows, QImage::Format_RGB888));;
+        cv::Mat matRGB;
+        cv::cvtColor(mat, matRGB, CV_BGR2RGB);
+        (*pixmap) = QPixmap::fromImage(QImage((unsigned char*) matRGB.data, matRGB.cols, matRGB.rows, QImage::Format_RGB888));;
 
         palette->setBrush(frame->backgroundRole(),QBrush(*pixmap));
         frame->setPalette(*palette);

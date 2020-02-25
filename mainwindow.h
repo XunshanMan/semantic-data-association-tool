@@ -70,7 +70,7 @@ private slots:
     void on_pushButton_7_clicked();
 
     void on_checkBox_showtraj_stateChanged(int arg1);
-
+    
 private:
     Ui::MainWindow *ui;
     QFrame *frame;
@@ -141,7 +141,6 @@ private:
     // 从当前instances 考虑 rot 生成 mvInstancesWithRot
     void AddRotToInstance(Instance &inWithRot, Instance &in, double rot_angle);
     // void refreshInstancesWithRot();
-
 };
 
 #endif // MAINWINDOW_H

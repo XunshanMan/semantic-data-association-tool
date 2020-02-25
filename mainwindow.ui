@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_2D">
      <attribute name="title">
@@ -235,7 +235,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr2_desk/images/</string>
+        <string>/home/tongyuan/workspace/dataset/real-home/5-high/rgb/</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_detection_dir">
@@ -248,7 +248,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr2_desk/associations/</string>
+        <string>/home/tongyuan/workspace/dataset/real-home/5-high/bbox_annotated/</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_num">
@@ -274,7 +274,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset_tools/instanceAnnotation/data/coco.names</string>
+        <string>/home/tongyuan/workspace/object-slam/annotation/semantic-data-association-tool/data/coco.names</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_6">
@@ -300,7 +300,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset/TUM_test/selected/fr2_desk/instance/instances.txt</string>
+        <string>/home/tongyuan/workspace/dataset/real-home/5-high/instances.txt</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_7">
@@ -326,7 +326,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/jhz/workspace/projects/dataset/TUM/rgbd_dataset_freiburg2_desk/</string>
+        <string>/home/tongyuan/workspace/dataset/real-home/5-high/</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_12">

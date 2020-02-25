@@ -36,6 +36,8 @@ public:
 
     void initialize(vector<Instance> &instances, Matrix3d& calib);
 
+    cv::Mat drawBboxMat(cv::Mat &im, Eigen::MatrixXd &mat_det);
+
 public:
     void initializeInstances(vector<Instance> &instances);
     vector<Association> process(VectorXd &poseTwc, MatrixXd &detMat);

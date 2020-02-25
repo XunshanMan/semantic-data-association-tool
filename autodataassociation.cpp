@@ -84,7 +84,7 @@ g2o::ellipsoid* AutoDataAssociation::generateEllipsoid(Instance& ins){
 
 vector<Association> AutoDataAssociation::associateProjEllipseAndDetections(vector<ProjEllipse>& projEllipses, MatrixXd &detMat)
 {
-    double THRESH_DIS = 150; // 中心 x y差距和不超过多少像素
+    double THRESH_DIS = 40; // 中心 x y差距和不超过多少像素
     // -------
     vector<Association> associations;
     vector<ProjEllipse> projEllipsesSelected; // 存储那些被选召的椭圆
@@ -161,7 +161,30 @@ cv::Mat AutoDataAssociation::drawProjection(cv::Mat &in)
     {
         Vector4d rect = proj.bbox;
         cv::rectangle(out, cv::Rect(cv::Point(rect[0],rect[1]),cv::Point(rect[2],rect[3])), cv::Scalar(0,0,255), 2);
+
     }
 
     return out.clone();
+}
+
+cv::Mat AutoDataAssociation::drawBboxMat(cv::Mat &im, Eigen::MatrixXd &mat_det)
+{
+    cv::Mat mImage = im.clone();
+    for( int r = 0; r<mat_det.rows(); r++)
+    {
+        VectorXd vDet = mat_det.row(r);
+
+        int labelId = int(vDet(5));
+        int colorId = labelId % 255;
+
+        //cout << "vDet " << vDet << endl;
+        // 如果检测有效. id号能匹配上
+
+        cv::Rect rec(cv::Point(vDet(1), vDet(2)), cv::Point(vDet(3), vDet(4)));
+        cv::rectangle(mImage, rec, cv::Scalar(255,0,0), 2);
+        cv::putText(mImage, to_string(labelId), cv::Point(vDet(1), vDet(2)), CV_FONT_HERSHEY_COMPLEX_SMALL, 0.5, cv::Scalar(255,0,0));
+
+    }
+
+    return mImage.clone();    
 }
