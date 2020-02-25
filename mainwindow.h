@@ -71,6 +71,7 @@ private slots:
 
     void on_checkBox_showtraj_stateChanged(int arg1);
     
+    void on_pushButton_Jump_clicked();
 private:
     Ui::MainWindow *ui;
     QFrame *frame;

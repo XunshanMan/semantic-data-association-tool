@@ -33,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // 初始化图像显示
     frame = new QFrame(ui->label);
 //    frame->resize(640,480);
-    frame->setGeometry(0,0,640,480);
+    // frame->setGeometry(0,0,640,480);
+    frame->setGeometry(0,0,960,540);
     pixmap = new QPixmap();
     palette = new QPalette();
 
@@ -107,10 +108,13 @@ void MainWindow::on_pushButton_clicked()
     calib << 540.68603515625, 0, 479.75,
         0, 540.68603515625, 269.75,
         0, 0, 1;
+    
+    int rows = 540;
+    int cols = 960;
 
     std::cout << "Load calibration file : " << std::endl << calib << std::endl;
 
-    mAssociater.initialize(mvInstances, calib);
+    mAssociater.initialize(mvInstances, calib, rows, cols);
 
     // 初始化数据集工具
     msDatasetDir = ui->lineEdit_datasetDir->text().toStdString();
@@ -546,7 +550,7 @@ void MainWindow::automaticAssociation(){
 
     if(find_gt)
     {
-        vector<Association> associations = mAssociater.process(pose, mmDetMat);
+        vector<Association> associations = mAssociater.process(pose, mmDetMat, true);
 
         // 获得了，如何显示出来?
 
@@ -566,9 +570,8 @@ void MainWindow::automaticAssociation(){
         // 读取图像切换.
         string imageFullPath = msImagePath + bareFileName + ".png";
         cv::Mat oriMat = cv::imread(imageFullPath, IMREAD_COLOR);
-        cv::Mat mat = mAssociater.drawProjection(oriMat);
-        // cv->
-        mat = mAssociater.drawBboxMat(mat, mmDetMat);
+
+        cv::Mat mat = mAssociater.drawVisualization(oriMat, mmDetMat, associations);
 
         cv::Mat matRGB;
         cv::cvtColor(mat, matRGB, CV_BGR2RGB);
@@ -653,3 +656,15 @@ void MainWindow::AddRotToInstance(Instance &inWithRot, Instance &in, double rot_
 //     int num = mvInstances.size();
 //     mvInstancesWithRot
 // }
+
+void MainWindow::on_pushButton_Jump_clicked()
+{
+    string sJumpID = ui->lineEdit_jump->text().toStdString();
+    int goal_id = stoi(sJumpID);
+    if(goal_id>0 && goal_id < miTotalNum){
+        saveCurrentDetection();        // 保存当前情况
+
+        miCurrentID = goal_id;
+        dealWithPic(miCurrentID);
+    }
+}

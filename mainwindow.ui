@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1513</width>
+    <width>1758</width>
     <height>805</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1501</width>
+      <width>1751</width>
       <height>741</height>
      </rect>
     </property>
@@ -151,14 +151,34 @@
         </property>
        </column>
       </widget>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="geometry">
+        <rect>
+         <x>580</x>
+         <y>10</y>
+         <width>221</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Automatic Data Association</string>
+       </property>
+      </widget>
+      <zorder>label_4</zorder>
+      <zorder>label_5</zorder>
+      <zorder>pushButton_2</zorder>
+      <zorder>tableWidget</zorder>
+      <zorder>tableWidget_instance</zorder>
+      <zorder>checkBox</zorder>
+      <zorder>checkBox</zorder>
      </widget>
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
         <x>840</x>
         <y>10</y>
-        <width>640</width>
-        <height>480</height>
+        <width>901</width>
+        <height>561</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -248,7 +268,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/tongyuan/workspace/dataset/real-home/5-high/bbox_annotated/</string>
+        <string>/home/tongyuan/workspace/dataset/real-home/5-high/bbox_s1/</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_num">
@@ -342,12 +362,38 @@
         <string>Dataset Dir:</string>
        </property>
       </widget>
+      <widget class="QLineEdit" name="lineEdit_jump">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>170</y>
+         <width>91</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1030</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_Jump">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>170</y>
+         <width>101</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Jump</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_3">
       <property name="geometry">
        <rect>
         <x>850</x>
-        <y>500</y>
+        <y>570</y>
         <width>301</width>
         <height>71</height>
        </rect>
@@ -386,7 +432,7 @@
       <property name="geometry">
        <rect>
         <x>1190</x>
-        <y>530</y>
+        <y>600</y>
         <width>111</width>
         <height>27</height>
        </rect>
@@ -399,26 +445,13 @@
       <property name="geometry">
        <rect>
         <x>1350</x>
-        <y>530</y>
+        <y>600</y>
         <width>111</width>
         <height>27</height>
        </rect>
       </property>
       <property name="text">
        <string>Quit</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBox">
-      <property name="geometry">
-       <rect>
-        <x>870</x>
-        <y>580</y>
-        <width>221</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Automatic Data Association</string>
       </property>
      </widget>
     </widget>
@@ -741,7 +774,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1513</width>
+     <width>1758</width>
      <height>25</height>
     </rect>
    </property>
@@ -751,7 +784,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>

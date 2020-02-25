@@ -17,10 +17,12 @@ bool compare_func(pair<int,double>& p1, pair<int,double>& p2)
     return p1.second < p2.second;
 }
 
-void AutoDataAssociation::initialize(vector<Instance> &instances, Matrix3d& calib)
+void AutoDataAssociation::initialize(vector<Instance> &instances, Matrix3d& calib, int rows, int cols)
 {
 
     mmCalib = calib;
+    mRows = rows;
+    mCols = cols;
     initializeInstances(instances);
 
 }
@@ -39,8 +41,89 @@ void AutoDataAssociation::initializeInstances(vector<Instance> &instances)
 
 }
 
+// 若是边界则输出 True
+bool AutoDataAssociation::calibrateMeasurement(Vector4d &measure , int rows, int cols){
+    int config_boarder = 10;    // 20个像素边界
+    int config_size = 100;
+
+    // 添加对大小的过滤
+    int x_length = measure[2] - measure[0];
+    int y_length = measure[3] - measure[1];
+    if( x_length < config_size || y_length < config_size ){
+        std::cout << " [small detection " << config_size << "] invalid. " << std::endl;
+        return true;
+    }
+
+    Vector4d measure_calibrated(-1,-1,-1,-1);
+    Vector4d measure_uncalibrated(-1,-1,-1,-1);
+
+    int correct_num = 0;
+    if(  measure[0]>config_boarder && measure[0]<cols-1-config_boarder )
+    {
+        measure_calibrated[0] = measure[0];
+        correct_num++;
+    }
+    if(  measure[2]>config_boarder && measure[2]<cols-1-config_boarder )
+    {
+        measure_calibrated[2] = measure[2];
+        correct_num++;
+    }
+    if(  measure[1]>config_boarder && measure[1]<rows-1-config_boarder )
+    {
+        measure_calibrated[1] = measure[1];
+        correct_num++;
+    }
+    if(  measure[3]>config_boarder && measure[3]<rows-1-config_boarder )
+    {
+        measure_calibrated[3] = measure[3];
+        correct_num++;
+    }
+
+    // DEBUG: 一旦有一个在边缘，我们直接舍弃掉这个边的误差！
+    // if( correct_num == 4)
+    //     measure = measure_calibrated;
+    // else
+    //     measure = measure_uncalibrated;
+
+    measure = measure_calibrated;
+
+    if( correct_num != 4)
+        return true;
+    else
+        return false;
+
+}
+
+void AutoDataAssociation::GetValidDetMat(MatrixXd &detMat, MatrixXd &detMatValid, std::vector<int> &originPos)
+{
+    int num = detMat.rows();
+
+    MatrixXd matValid; matValid.resize(0, detMat.cols());
+    std::vector<int> posVec;
+    for( int i=0; i<num; i++)
+    {
+        VectorXd detVec = detMat.row(i);
+
+        Vector4d measure; measure << detVec[1], detVec[2], detVec[3], detVec[4];
+        bool is_border = calibrateMeasurement(measure, mRows, mCols);
+
+        bool c1 = !is_border;  // 不能是边界, 小物体
+
+        if( c1 )
+        {
+            matValid.conservativeResize(matValid.rows()+1, matValid.cols());
+            matValid.row(matValid.rows()-1) =  detVec;
+            posVec.push_back(i);
+        }
+    }
+
+    detMatValid = matValid;
+    originPos = posVec;
+}
+
 // 输入: 当前帧gt,
-vector<Association> AutoDataAssociation::process(VectorXd &poseTwc, MatrixXd &detMat){
+vector<Association> AutoDataAssociation::process(VectorXd &poseTwc, MatrixXd &detMat, bool add_condition){
+
     int objNum = mvpEllipsoids.size();
 
     vector<ProjEllipse> projEllipses;
@@ -61,8 +144,32 @@ vector<Association> AutoDataAssociation::process(VectorXd &poseTwc, MatrixXd &de
         projEllipses.push_back(proje);
     }
 
+    // 依次循环得到关联结果.
+    mvProjEllipses.clear();
+    mvProjEllipses = projEllipses;
+
     // 开始做关联
-    vector<Association> associations = associateProjEllipseAndDetections(projEllipses, detMat);
+    vector<Association> associations;
+    if(!add_condition)
+        associations = associateProjEllipseAndDetections(projEllipses, detMat);
+    else
+    {
+        // 筛选满足条件的 det组成新的 mat, 同时用一个 vector 记录它们的原始位置
+        std::vector<int> originPos;
+        MatrixXd detMatValid;
+        GetValidDetMat(detMat, detMatValid, originPos);
+
+        vector<Association> associations_temp = associateProjEllipseAndDetections(projEllipses, detMatValid);
+
+        associations.clear();
+        for( auto as : associations_temp )
+        {
+            as.detID = originPos[as.detID];     // 切换回原来的id.
+            associations.push_back(as);
+        }
+
+    }
+    
 
     return associations;
 
@@ -84,7 +191,7 @@ g2o::ellipsoid* AutoDataAssociation::generateEllipsoid(Instance& ins){
 
 vector<Association> AutoDataAssociation::associateProjEllipseAndDetections(vector<ProjEllipse>& projEllipses, MatrixXd &detMat)
 {
-    double THRESH_DIS = 40; // 中心 x y差距和不超过多少像素
+    double THRESH_DIS = 100; // 中心 x y差距和不超过多少像素
     // -------
     vector<Association> associations;
     vector<ProjEllipse> projEllipsesSelected; // 存储那些被选召的椭圆
@@ -146,21 +253,43 @@ vector<Association> AutoDataAssociation::associateProjEllipseAndDetections(vecto
         }
 
     }
-    // 依次循环得到关联结果.
-    mvProjEllipses.clear();
-    mvProjEllipses = projEllipsesSelected;
+
 
     return associations;
+}
+
+cv::Mat AutoDataAssociation::drawVisualization(cv::Mat &oriMat, MatrixXd &mmDetMat, vector<Association> &associations)
+{
+    cv::Mat mat = drawProjection(oriMat);
+    // cv->
+    mat = drawBboxMat(mat, mmDetMat);
+
+    // draw association
+    for( auto asso : associations )
+    {
+        if ( asso.instanceID == -1 ) continue;
+        VectorXd detVec = mmDetMat.row(asso.detID);
+        cv::Point det_point(detVec[1], detVec[2]);
+        
+        auto proj = mvProjEllipses[asso.instanceID];
+        cv::Point proj_point(proj.bbox[0],proj.bbox[1]);
+
+        cv::line(mat, det_point, proj_point, cv::Scalar(0,255,0), 2);
+    }
+    return mat;
 }
 
 cv::Mat AutoDataAssociation::drawProjection(cv::Mat &in)
 {
     cv::Mat out = in.clone();
     int num = mvProjEllipses.size();
+
+    int ins_id = 0;
     for(auto proj : mvProjEllipses )
     {
         Vector4d rect = proj.bbox;
         cv::rectangle(out, cv::Rect(cv::Point(rect[0],rect[1]),cv::Point(rect[2],rect[3])), cv::Scalar(0,0,255), 2);
+        cv::putText(out, to_string(ins_id++), cv::Point(rect(2), rect(3)), CV_FONT_HERSHEY_COMPLEX, 1, cv::Scalar(0,0,255));
 
     }
 
@@ -173,6 +302,10 @@ cv::Mat AutoDataAssociation::drawBboxMat(cv::Mat &im, Eigen::MatrixXd &mat_det)
     for( int r = 0; r<mat_det.rows(); r++)
     {
         VectorXd vDet = mat_det.row(r);
+        Vector4d measure; measure << vDet[1], vDet[2], vDet[3], vDet[4];
+        bool is_border = calibrateMeasurement(measure, mRows, mCols);
+
+        if( is_border ) continue;
 
         int labelId = int(vDet(5));
         int colorId = labelId % 255;
@@ -183,6 +316,7 @@ cv::Mat AutoDataAssociation::drawBboxMat(cv::Mat &im, Eigen::MatrixXd &mat_det)
         cv::Rect rec(cv::Point(vDet(1), vDet(2)), cv::Point(vDet(3), vDet(4)));
         cv::rectangle(mImage, rec, cv::Scalar(255,0,0), 2);
         cv::putText(mImage, to_string(labelId), cv::Point(vDet(1), vDet(2)), CV_FONT_HERSHEY_COMPLEX_SMALL, 0.5, cv::Scalar(255,0,0));
+        cv::putText(mImage, to_string(r), cv::Point(vDet(3), vDet(4)), CV_FONT_HERSHEY_COMPLEX, 0.8, cv::Scalar(0,255,0));
 
     }
 
