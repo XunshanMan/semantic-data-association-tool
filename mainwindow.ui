@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab_2D">
      <attribute name="title">
@@ -164,13 +164,6 @@
         <string>Automatic Data Association</string>
        </property>
       </widget>
-      <zorder>label_4</zorder>
-      <zorder>label_5</zorder>
-      <zorder>pushButton_2</zorder>
-      <zorder>tableWidget</zorder>
-      <zorder>tableWidget_instance</zorder>
-      <zorder>checkBox</zorder>
-      <zorder>checkBox</zorder>
      </widget>
      <widget class="QLabel" name="label">
       <property name="geometry">
@@ -255,7 +248,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/tongyuan/workspace/dataset/real-home/5-high/rgb/</string>
+        <string>/media/tongyuan/disk_ubuntu/Ubuntu/dataset/ICL-NUIM/living_room_traj0n_frei_png/rgb/</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_detection_dir">
@@ -268,7 +261,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/tongyuan/workspace/dataset/real-home/5-high/bbox_s1/</string>
+        <string>/media/tongyuan/disk_ubuntu/Ubuntu/dataset/ICL-NUIM/living_room_traj0n_frei_png/bbox_testannotation/</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_num">
@@ -320,7 +313,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/tongyuan/workspace/dataset/real-home/5-high/instances.txt</string>
+        <string>/home/tongyuan/workspace/object-slam/datas/ICL-NUIM-annotation/object_list.txt</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_7">
@@ -346,7 +339,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/tongyuan/workspace/dataset/real-home/5-high/</string>
+        <string>/media/tongyuan/disk_ubuntu/Ubuntu/dataset/ICL-NUIM/living_room_traj0n_frei_png/</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_12">
@@ -372,7 +365,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>1030</string>
+        <string>0</string>
        </property>
       </widget>
       <widget class="QPushButton" name="pushButton_Jump">
@@ -507,7 +500,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/tongyuan/workspace/object-slam/datas/real-home-annotation/pointcloud.pcd</string>
+        <string>/media/tongyuan/disk_ubuntu/Ubuntu/dataset/ICL-NUIM/map/map.pcd</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_num_2">
@@ -533,7 +526,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/tongyuan/workspace/object-slam/object-level-slam/Example/param/TUM2.yaml</string>
+        <string>/home/tongyuan/workspace/object-slam/Object-oriented-SLAM/Object-oriented-SLAM/Example/param/ICL-NUIM.yaml</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_11">
@@ -572,7 +565,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>/home/tongyuan/workspace/object-slam/datas/real-home-annotation/object_list.txt</string>
+        <string>/home/tongyuan/workspace/object-slam/datas/ICL-NUIM-annotation/object_list.txt</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_13">
@@ -624,7 +617,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>0.0167579 -0.983143  0.182067  0.428614</string>
+        <string>-0.00162817 0.999984 -0.00542226 1.37843</string>
        </property>
       </widget>
      </widget>
@@ -784,7 +777,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>

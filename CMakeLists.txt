@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(instanceAnnotation) # Your project name
 
+# set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 11) # This is equal to QMAKE_CXX_FLAGS += -std=c++0x
 
 # Find includes in corresponding build directories
@@ -23,15 +24,27 @@ set(SOURCES
 set(UI mainwindow.ui)
 
 
-# For opencv
-set( OpenCV_DIR "/opt/ros/kinetic/share/OpenCV-3.3.1-dev/" )
-find_package(OpenCV 3.0 QUIET)
-if(NOT OpenCV_FOUND)
-    find_package(OpenCV 2.4.3 QUIET)
-    if(NOT OpenCV_FOUND)
-        message(FATAL_ERROR "OpenCV > 2.4.3 not found.")
-    endif()
+# For Opencv, check environment first
+if(NOT DEFINED ENV{OpenCV_DIR})
+   message("not defined environment variable: OpenCV_DIR")
+   find_package(OpenCV 3.0 QUIET)
+   if(NOT OpenCV_FOUND)
+   find_package(OpenCV 2.4.11 REQUIRED)
+      if(NOT OpenCV_FOUND)
+         message(FATAL_ERROR "OpenCV > 2.4.3 not found.")
+      endif()
+   endif()
+else()
+   message("Environment variable OpenCV_DIR: " $ENV{OpenCV_DIR})
+   set(OpenCV_DIR $ENV{OpenCV_DIR})
+   find_package(OpenCV)
+   if(NOT OpenCV_FOUND)
+      message(FATAL_ERROR "OpenCV not found.")
+   endif()
 endif()
+
+MESSAGE("OpenCV_INCLUDE_DIRS: " ${OpenCV_INCLUDE_DIRS})
+
 
 find_package(Eigen3 REQUIRED)
 find_package(Pangolin REQUIRED)
@@ -51,7 +64,7 @@ include_directories(
     )
 
 # For PCL
-FIND_PACKAGE( PCL REQUIRED COMPONENTS common io visualization filters )
+FIND_PACKAGE( PCL REQUIRED )
 list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4") # use this in Ubuntu 16.04
 ADD_DEFINITIONS( ${PCL_DEFINITIONS} )
 INCLUDE_DIRECTORIES( ${PCL_INCLUDE_DIRS}  )

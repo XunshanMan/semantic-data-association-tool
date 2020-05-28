@@ -9,6 +9,7 @@
 
 // 快捷键
 #include <QShortcut>
+#include <QString>
 
 #include "dataprocess_utils.h"
 #include <Eigen/Core>
@@ -258,7 +259,10 @@ void MainWindow::refreshInstanceTable(){
         pTable->setItem(i, INS_TABLE_ID, new QTableWidgetItem(QString::number(pObj->id)));
 
         for( int n=0; n<9; n++)
-            pTable->setItem(i, n+1, new QTableWidgetItem(QString::number(pObj->param[n])));
+        {
+            QTableWidgetItem* pItem = new QTableWidgetItem(QString::number(pObj->param[n]));
+            pTable->setItem(i, n+1, pItem);
+        }
 
         // 将地平面额外旋转置0
         pTable->setItem(i, INS_TABLE_GPROT, new QTableWidgetItem(QString::number(0)));
@@ -375,9 +379,9 @@ void MainWindow::on_pushButton_5_clicked()
     msLabelConfigPath = ui->lineEdit_labelConfig_2->text().toStdString();
     readLabelConfig(msLabelConfigPath);
     // 更新实例.
-    msInstancesPath = ui->lineEdit_instancePath_2->text().toStdString();
-    readInstances(msInstancesPath);
-    refreshInstanceTable();
+    // msInstancesPath = ui->lineEdit_instancePath_2->text().toStdString();
+    // readInstances(msInstancesPath);
+    // refreshInstanceTable();
 
     // 读取地平面
     string strGroundPlane = ui->lineEdit_groundPlane->text().toStdString();
