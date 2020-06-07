@@ -1,0 +1,12 @@
+%YAML:1.0
+PATH.SystemSetting: /home/lzw/workspace/Object-SLAM/codes/EllipsoidSLAM-private/Example/param/ICL-NUIM.yaml
+
+PATH.PCD: /media/lzw/HD-Download/Ubuntu/dataset/ICL-NUIM/map/ICL-NUIM-office.pcd
+
+PATH.LabelConfig: /home/lzw/workspace/Object-SLAM/codes/catkin_ws/src/darknet_ros/darknet/data/coco.names
+
+#PATH.Instance: /media/lzw/root/home/tongyuan/workspace/experiments/ra-l/ICL-NUIM/object-slam/office/traj0-gt/objects.txt
+PATH.Instance: /media/lzw/root/home/tongyuan/workspace/experiments/ra-l/ICL-NUIM/object-slam/office/traj0-gt/objects_annotation.txt
+
+Setting.Groundplane: '0 0 0 0'
+

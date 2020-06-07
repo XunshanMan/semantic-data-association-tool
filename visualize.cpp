@@ -136,6 +136,8 @@ g2o::ellipsoid* visualizer::generateEllipsoid(Instance& ins){
     // 设置 label id.
     e->miLabel = ins.label;
 
+    e->miInstanceID = ins.id;
+
     return e;
 }
 

@@ -238,7 +238,9 @@ void MainWindow::readInstances(string &path){
         for(int n=0;n<9;n++)
             obj.param[n] = double(v(n+1));
 
-        obj.label = int(v(10));
+        if(v.size()==11)
+            obj.label = int(v(10));
+        else obj.label = 0;
 
         mvInstances[i] = obj;
     }
@@ -250,6 +252,7 @@ void MainWindow::readInstances(string &path){
 
 void MainWindow::refreshInstanceTable(){
     int num = mvInstances.size();
+    std::cout << "instance num : " << num << std::endl;
     QTableWidget* pTable = ui->tableWidget_instance3D;
     pTable->clearContents();
     pTable->setRowCount(num);
@@ -372,20 +375,31 @@ void MainWindow::on_pushButton_5_clicked()
 {
     std::cout << "Initializing Viewer..." << std::endl;
 
-    string path_setting = ui->lineEdit_settingPath->text().toStdString();
-    string path_pcd = ui->lineEdit_pcdPath->text().toStdString();
+    // 从yaml配置文件中读取
+    string path_config = ui->lineEdit_configPath->text().toStdString();
+    std::cout << "Load configuration from file : " << path_config << std::endl;
+    cv::FileStorage config( path_config.c_str(), cv::FileStorage::READ );
+
+    string path_setting = string(config["PATH.SystemSetting"]);
+    string path_pcd = string(config["PATH.PCD"]);
 
     // 更新标签.
-    msLabelConfigPath = ui->lineEdit_labelConfig_2->text().toStdString();
+    msLabelConfigPath = string(config["PATH.LabelConfig"]);
     readLabelConfig(msLabelConfigPath);
     // 更新实例.
-    // msInstancesPath = ui->lineEdit_instancePath_2->text().toStdString();
-    // readInstances(msInstancesPath);
-    // refreshInstanceTable();
+    msInstancesPath = string(config["PATH.Instance"]);;
+    readInstances(msInstancesPath);
+    refreshInstanceTable();
 
     // 读取地平面
-    string strGroundPlane = ui->lineEdit_groundPlane->text().toStdString();
+    string strGroundPlane = string(config["Setting.Groundplane"]);
     mGroundPlane = loadPlaneFromString(strGroundPlane);
+
+    std::cout << " - path_setting : " << path_setting << std::endl;
+    std::cout << " - path_pcd : " << path_pcd << std::endl;
+    std::cout << " - msInstancesPath : " << msInstancesPath << std::endl;
+    std::cout << " - msLabelConfigPath : " << msLabelConfigPath << std::endl;
+    std::cout << " - strGroundPlane : " << strGroundPlane << std::endl;
 
     mVisualizer.startVisualizationThread(path_setting);
     mVisualizer.addBackgroundPoint(path_pcd);
@@ -497,7 +511,10 @@ void MainWindow::on_tableWidget_instance3D_cellActivated(int row, int column)
 
 void MainWindow::on_pushButton_7_clicked()
 {
-    on_pushButton_4_clicked(); // 与2d按钮一致.
+    // Save all files.
+    saveCurrentInstances();
+
+    this->destroy();
 }
 
 void MainWindow::saveCurrentInstances()

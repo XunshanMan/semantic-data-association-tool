@@ -17,7 +17,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>40</x>
       <y>0</y>
       <width>1751</width>
       <height>741</height>
@@ -477,19 +477,6 @@
         <string>Pcd Map path:</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_5">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>160</y>
-         <width>191</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Load</string>
-       </property>
-      </widget>
       <widget class="QLineEdit" name="lineEdit_pcdPath">
        <property name="geometry">
         <rect>
@@ -617,7 +604,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>-0.00162817 0.999984 -0.00542226 1.37843</string>
+        <string>0 0 0 0</string>
        </property>
       </widget>
      </widget>
@@ -736,10 +723,10 @@
      <widget class="QPushButton" name="pushButton_7">
       <property name="geometry">
        <rect>
-        <x>970</x>
-        <y>650</y>
-        <width>171</width>
-        <height>27</height>
+        <x>1050</x>
+        <y>100</y>
+        <width>191</width>
+        <height>81</height>
        </rect>
       </property>
       <property name="text">
@@ -757,6 +744,45 @@
       </property>
       <property name="text">
        <string>Show Trajectory</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_configPath">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>70</y>
+        <width>291</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>./config.yaml</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_15">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>50</y>
+        <width>191</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Config Path(yaml):</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_5">
+      <property name="geometry">
+       <rect>
+        <x>1050</x>
+        <y>20</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Load</string>
       </property>
      </widget>
     </widget>
