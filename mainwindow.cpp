@@ -380,14 +380,20 @@ void MainWindow::on_pushButton_5_clicked()
     std::cout << "Load configuration from file : " << path_config << std::endl;
     cv::FileStorage config( path_config.c_str(), cv::FileStorage::READ );
 
+    string path_root = string(config["PATH.ROOT"]);
     string path_setting = string(config["PATH.SystemSetting"]);
     string path_pcd = string(config["PATH.PCD"]);
+    if(path_pcd.size()>0 && path_pcd[0]=='.')
+        path_pcd = path_root + path_pcd;
 
     // 更新标签.
     msLabelConfigPath = string(config["PATH.LabelConfig"]);
+
     readLabelConfig(msLabelConfigPath);
     // 更新实例.
-    msInstancesPath = string(config["PATH.Instance"]);;
+    msInstancesPath = string(config["PATH.Instance"]);
+    if(msInstancesPath.size()>0 && msInstancesPath[0]=='.')
+        msInstancesPath = path_root + msInstancesPath;
     readInstances(msInstancesPath);
     refreshInstanceTable();
 
